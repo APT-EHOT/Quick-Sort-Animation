@@ -20,7 +20,7 @@ namespace QuickSortAnimation
         const int _arraySize = 10;
         const int _textSize = 32;
 
-        const int _deltaTime = 2000;
+        const int _deltaTime = 2000; // change framerate animation time 
 
         bool wasSwapped = false;
 
