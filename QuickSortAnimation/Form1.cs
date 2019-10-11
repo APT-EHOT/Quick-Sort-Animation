@@ -80,7 +80,7 @@ namespace QuickSortAnimation
 
             for (int i = 0; i < _width; i++)
             {
-                Brush mainBrush; 
+                Brush mainBrush;
                 Brush pointerBrush;
 
                 // borders of qSort iteration
@@ -89,21 +89,21 @@ namespace QuickSortAnimation
                     mainBrush = Brushes.LightGray;
                     pointerBrush = Brushes.Gray;
                 }
-                
+
                 // pointers of qSort iteration
                 else if ((i == _leftPointer) || (i == _rightPointer))
                 {
                     mainBrush = Brushes.DarkRed;
                     pointerBrush = Brushes.Red;
-                }       
-                    
+                }
+
                 // pivot element
                 else if (i == _pivotPointer)
                 {
                     mainBrush = Brushes.DarkBlue;
                     pointerBrush = Brushes.Blue;
                 }
-                    
+
                 // other elements
                 else
                     mainBrush = pointerBrush = Brushes.NavajoWhite;
@@ -118,7 +118,7 @@ namespace QuickSortAnimation
                         int integerToPrint = numbers[i];
                         RectangleF rectangleF = new RectangleF(i * _pixelSize, j * _pixelSize, _pixelSize, _pixelSize);
                         graphics.DrawString(integerToPrint.ToString(), new Font("Tahoma", _textSize), Brushes.Black, rectangleF);
-                    } 
+                    }
 
                     // draws other elements of column
                     else
@@ -153,13 +153,13 @@ namespace QuickSortAnimation
                     {
                         leftPointer++; SetPointersGlobal(leftBorder, rightBorder, leftPointer, rightPointer, pivotPointer); Thread.Sleep(_deltaTime);
                     }
-                        
+
 
                     while (numbers[rightPointer] > pivotElement)
                     {
                         rightPointer--; SetPointersGlobal(leftBorder, rightBorder, leftPointer, rightPointer, pivotPointer); Thread.Sleep(_deltaTime);
                     }
-                        
+
 
                     if (leftPointer <= rightPointer)
                     {
@@ -181,7 +181,7 @@ namespace QuickSortAnimation
                     QuickSort(leftPointer, rightBorder);
 
             }).Start();
-            
+
         }
 
         public Form1()
@@ -194,7 +194,7 @@ namespace QuickSortAnimation
             DrawWindow();
 
             QuickSort(0, _arraySize - 1);
-            
+
             Size = bitmap.Size;
             TickTimer = new System.Windows.Forms.Timer { Interval = _deltaTime, Enabled = true };
             TickTimer.Tick += TickTimer_Tick;
@@ -203,7 +203,7 @@ namespace QuickSortAnimation
         // reprint window every tick
         private void TickTimer_Tick(object sender, EventArgs e)
         {
-            DrawWindow(); 
+            DrawWindow();
         }
     }
 }
