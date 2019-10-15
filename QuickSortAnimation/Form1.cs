@@ -190,6 +190,7 @@ namespace QuickSortAnimation
             graphics = Graphics.FromImage(bitmap);
             WindowPictureBox = new PictureBox { Dock = DockStyle.Fill, Parent = this };
             GetShuffledArray();
+            this.Text = "Анимация быстрой сортировки";
 
             DrawWindow();
 
