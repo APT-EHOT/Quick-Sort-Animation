@@ -11,16 +11,21 @@ using System.Windows.Forms;
 
 namespace QuickSortAnimation
 {
-    public partial class Form1 : Form
+    public partial class AnimationForm : Form
     {
-        // SIZE RELIABLE CONST BLOCK
-        const int _pixelSize = 80;
-        const int _width = 10;
-        const int _height = 11;
-        const int _arraySize = 10;
-        const int _textSize = 32;
 
-        const int _deltaTime = 2000; // change framerate animation time 
+        // variables from startForm
+        public int elementsAmountTransit;
+        public int tickTimeTransit;
+
+        // animation params
+        static int _pixelSize;
+        static int _width;
+        static int _height;
+        static int _arraySize;
+        static int _textSize;
+
+        int _deltaTime; // animation frames refreshing time 
 
         bool wasSwapped = false;
 
@@ -30,9 +35,9 @@ namespace QuickSortAnimation
         private int _rightPointer = 0;
         private int _pivotPointer = 0;
 
-        int[] numbers = new int[_arraySize]; // array to sort
+        int[] numbers; // array to sort
 
-        public Bitmap bitmap = new Bitmap(_pixelSize * _width + 20, _pixelSize * _height + 40);
+        public Bitmap bitmap;
         public Graphics graphics;
         private PictureBox WindowPictureBox { get; }
         public System.Windows.Forms.Timer TickTimer { get; }
@@ -44,21 +49,27 @@ namespace QuickSortAnimation
             b = c;
         }
 
-        // gets pointers from QSort and sets it globally
-        public void SetPointersGlobal(int leftBorder, int rightBorder, int leftPointer, int rightPointer, int pivotPointer)
+        // sets animation params
+        void SetInitData(int elementsAmount, int tickTime)
         {
-            _leftBorder = leftBorder;
-            _rightBorder = rightBorder;
-            _leftPointer = leftPointer;
-            _rightPointer = rightPointer;
-            _pivotPointer = pivotPointer;
+            // animation elements scaling parameter
+            double factor = (double)elementsAmount / 10.0;
+
+            // setting animation drawing params
+            _pixelSize = (int)(1.0 / factor * 80.0);
+            _width = (int)(factor * 10);
+            _height = ((int)(factor * 10)) + 1;
+            _arraySize = elementsAmount;
+            _textSize = (int)(1.0 / factor * 32.0);
+
+            _deltaTime = tickTime;
         }
 
-        // shuffles array to sort
+        // make and shuffles array to sort
         public void GetShuffledArray()
         {
             Random random = new Random();
-            int randomSwap = 100 + random.Next(1000);
+            int randomSwap = 10000 + random.Next(1000000);
 
             for (int i = 0; i < _arraySize; i++)
                 numbers[i] = i + 1;
@@ -184,27 +195,48 @@ namespace QuickSortAnimation
 
         }
 
-        public Form1()
+        // gets pointers from QSort and sets it globally
+        public void SetPointersGlobal(int leftBorder, int rightBorder, int leftPointer, int rightPointer, int pivotPointer)
         {
-            InitializeComponent();
-            graphics = Graphics.FromImage(bitmap);
-            WindowPictureBox = new PictureBox { Dock = DockStyle.Fill, Parent = this };
-            GetShuffledArray();
-            this.Text = "Анимация быстрой сортировки";
-
-            DrawWindow();
-
-            QuickSort(0, _arraySize - 1);
-
-            Size = bitmap.Size;
-            TickTimer = new System.Windows.Forms.Timer { Interval = _deltaTime, Enabled = true };
-            TickTimer.Tick += TickTimer_Tick;
+            _leftBorder = leftBorder;
+            _rightBorder = rightBorder;
+            _leftPointer = leftPointer;
+            _rightPointer = rightPointer;
+            _pivotPointer = pivotPointer;
         }
 
         // reprint window every tick
         private void TickTimer_Tick(object sender, EventArgs e)
         {
             DrawWindow();
+        }
+
+
+        // main animation method
+        public AnimationForm(int elementsAmount, int tickTime)
+        {
+            InitializeComponent();
+            this.StartPosition = FormStartPosition.CenterScreen;
+
+            elementsAmountTransit = elementsAmount;
+            tickTimeTransit = tickTime;
+            SetInitData(elementsAmountTransit, tickTimeTransit);
+
+            bitmap = new Bitmap(_pixelSize * _width + 20, _pixelSize * _height + 50);
+            graphics = Graphics.FromImage(bitmap);
+            WindowPictureBox = new PictureBox { Dock = DockStyle.Fill, Parent = this };
+            Size = bitmap.Size;
+
+            numbers = new int[_arraySize];
+            GetShuffledArray(); // shuffling 'numbers' array
+
+            DrawWindow();
+
+            QuickSort(0, _arraySize - 1);
+
+            // refreshing timer
+            TickTimer = new System.Windows.Forms.Timer { Interval = _deltaTime, Enabled = true };
+            TickTimer.Tick += TickTimer_Tick;
         }
     }
 }
